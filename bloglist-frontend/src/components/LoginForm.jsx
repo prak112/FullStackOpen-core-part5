@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types'
 
 
-export default function LoginForm({ handleLogin, username, password, setUsername, setPassword }) {
+export default function LoginForm({ handleLogin, username, password, handleUsernameChange, handlePasswordChange }) {
     return (
       <div>
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
             Username :&nbsp;
-            <input type="text" value={username} name="Username" onChange={(e) => setUsername(e.target.value)}/>
+            <input type="text" value={username} name="Username" onChange={handleUsernameChange}/>
           </div>
           <div>
             Password :&nbsp;
-            <input type="password" value={password} name="Password" onChange={(e) => setPassword(e.target.value)}/>
+            <input type="password" value={password} name="Password" onChange={handlePasswordChange}/>
           </div>
           <div>
             <button type="submit">Login</button>
@@ -26,6 +26,6 @@ LoginForm.propTypes = {
     handleLogin: PropTypes.func.isRequired,
     username: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
-    setUsername: PropTypes.func.isRequired,
-    setPassword: PropTypes.func.isRequired,
+    handlePasswordChange: PropTypes.func.isRequired,
+    handleUsernameChange: PropTypes.func.isRequired,
 }
