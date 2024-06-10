@@ -12,15 +12,18 @@ export default function App() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setnotificationMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState('')
   const [newBlog, setNewBlog] = useState({})
 
+  // Fetch all blogs
   useEffect(() => {
     blogService
       .getAll()
       .then(blogs => setBlogs(blogs))
   }, [])
 
+  // Check if user is already logged in
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if(loggedUserJSON){
@@ -29,7 +32,6 @@ export default function App() {
       blogService.setToken(appUser.token)
     }
   }, [])
-
 
   const handleLogin = async(event) => {
     event.preventDefault()
@@ -41,9 +43,11 @@ export default function App() {
       setPassword('')
     }
     catch(exception){
-      setErrorMessage('ERROR: Invalid username or password')
+      setnotificationMessage('ERROR: Invalid username or password')
+      setNotificationType('fail')
       setTimeout(() => {
-        setErrorMessage(null)
+        setnotificationMessage(null)
+        setNotificationType('')
       }, 5000)
     }
   }
@@ -60,11 +64,15 @@ export default function App() {
     try{
       const response = await blogService.addBlog(newBlog)
       setBlogs(blogs.concat(response))
+      setnotificationMessage(`New blog added! ${response.title} by ${response.author}`) 
+      setNotificationType('success')
     }
     catch(exception){
-      setErrorMessage('ERROR: Unable to add blog')
+      setnotificationMessage('ERROR: Unable to add blog')
+      setNotificationType('fail')
       setTimeout(() => {
-        setErrorMessage(null)
+        setnotificationMessage(null)
+        setNotificationType('')
       }, 5000)
     }    
   }
@@ -72,9 +80,7 @@ export default function App() {
 
   return (
     <div style={{ padding: '20px' }}>
-      {errorMessage === null 
-        ? null 
-        : <Notification message={errorMessage} />}
+    <Notification message={notificationMessage} type={notificationType} />
       {user === null
         ? <LoginForm 
             handleLogin={handleLogin} 

@@ -37,10 +37,10 @@ function AddBlogForm({ addBlogToList, title, author, url }){
 }
 
 AddBlogForm.propTypes = {
-    addBlogToList: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired
+    addBlogToList: PropTypes.func,
+    title: PropTypes.string,
+    author: PropTypes.string,
+    url: PropTypes.string
 }
 
 export { Blog, AddBlogForm }
