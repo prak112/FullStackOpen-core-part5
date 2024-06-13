@@ -8,11 +8,11 @@ export default function LoginForm({ handleLogin, username, password, handleUsern
         <form onSubmit={handleLogin}>
           <div>
             Username :&nbsp;
-            <input type="text" value={username} name="Username" onChange={handleUsernameChange}/>
+            <input type="text" value={username} name="Username" onChange={handleUsernameChange} autoComplete="username" />
           </div>
           <div>
             Password :&nbsp;
-            <input type="password" value={password} name="Password" onChange={handlePasswordChange}/>
+            <input type="password" value={password} name="Password" onChange={handlePasswordChange} autoComplete="current-password" />
           </div>
           <div>
             <button type="submit">Login</button>

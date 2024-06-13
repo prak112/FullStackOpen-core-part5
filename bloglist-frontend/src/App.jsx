@@ -17,16 +17,8 @@ export default function App() {
   const [user, setUser] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [notificationType, setNotificationType] = useState('')
-  // const [showBlogForm, setShowBlogForm] = useState(false)
 
-  // Fetch all blogs
-  useEffect(() => {
-    blogService
-      .getAll()
-      .then(blogs => setBlogs(blogs))
-  }, [])
-
-  // Check if user is already logged in
+  // Verify user log in status, set auth-JWT
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if(loggedUserJSON){
@@ -36,13 +28,24 @@ export default function App() {
     }
   }, [])
 
+  // Fetch ALL blogs
+  useEffect(() => {
+      blogService
+        .getAll()
+        .then(blogs => {
+          const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes )
+          setBlogs(sortedBlogs)
+        })
+    }, [])
 
-  const notificationTimeout = setTimeout(() => {
-    setNotificationMessage(null)
-    setNotificationType('')
-  }, 5000)
 
-
+  const notificationTimeout = (inSeconds) => {
+    setTimeout(() => {
+      setNotificationMessage(null)
+      setNotificationType('')
+    }, inSeconds * 1000)
+  }  
+  // setup local storage of authenticated user  
   const handleLogin = async(event) => {
     event.preventDefault()
     try{
@@ -55,27 +58,57 @@ export default function App() {
     catch(exception){
       setNotificationMessage('ERROR: Invalid username or password')
       setNotificationType('fail')
-      notificationTimeout()
+      notificationTimeout(5)
     }
   }
 
-  // form data handled in BlogForm, so no need to pass it here
-  const addBlog = async(blogObject) => {
+  // form data handled in BlogForm component
+  const handleAddBlog = async(blogObject) => {
     try{
       const response = await blogService.addBlog(blogObject)
       setBlogs(blogs.concat(response))
       setNotificationMessage(`New blog added! ${response.title} by ${response.author}`) 
       setNotificationType('success')
+      notificationTimeout(4)
     }
     catch(exception){
       setNotificationMessage('ERROR: Unable to add blog')
       setNotificationType('fail')
-      notificationTimeout()
+      notificationTimeout(5)
     }    
   }
 
-  // const showWhenBlogFormIsVisible = { display: showBlogForm ? '' : 'none' }
-  // const showWhenBlogFormIsHidden = { display: showBlogForm ? 'none' : '' }
+  // updated likes handled in Blog component
+  const updateLikesInDb = async(updatedBlog) => {
+    try {    
+      const response = await blogService.updateBlog(updatedBlog.id, updatedBlog)
+      const updatedBlogs = blogs.map(blog => blog.id !== response.id ? blog : response)
+      setBlogs(updatedBlogs)
+    }
+    catch(exception){
+      setNotificationMessage('ERROR: Unable to update blog likes')
+      setNotificationType('fail')
+      notificationTimeout(5)
+    }
+  }
+
+  // delete blog from system
+  const removeBlogInDb = async(blogToDelete) => {
+    try{      
+      await blogService.removeBlog(blogToDelete.id, blogToDelete)
+      setNotificationMessage(`Removed blog: ${blogToDelete.title}`)
+      setNotificationType('success')
+      notificationTimeout(6)
+      // refresh blogs viewed
+      const currentBlogs = blogs.filter(blog => blog.id !== blogToDelete.id ? blog : null)
+      setBlogs(currentBlogs)
+    }
+    catch(exception){
+      setNotificationMessage('ERROR: Unauthorized. Only blogs saved by User can be removed.')
+      setNotificationType('fail')
+      notificationTimeout(5)
+    }
+  }
 
 
   return (
@@ -89,18 +122,23 @@ export default function App() {
             handleUsernameChange={(e) => setUsername(e.target.value)} 
             handlePasswordChange={(e) => setPassword(e.target.value)}/>
         : <div>
-            <h2>Saved Blogs</h2>
+            <h2>Blogs List</h2>
             <p>
               {user.name} Logged in &nbsp;
               <button onClick={() => setUser(null)}>Logout ?</button>
             </p>
             <br />
-            <ToggleContent buttonLabel='Add Blog'>
-              <BlogForm addBlogToList={addBlog} />
+            <ToggleContent showButtonLabel='Add Blog' hideButtonLabel='Cancel'>
+              <BlogForm addBlogToList={handleAddBlog} />
             </ToggleContent>
             <br />
             {blogs.map((blog) => (
-              <Blog key={blog.id} blog={blog} />
+              <Blog 
+                key={blog.id} 
+                blog={blog} 
+                updateLikesInDb={updateLikesInDb}
+                removeBlogInDb={removeBlogInDb}
+              />
             ))}
           </div>
       }      
