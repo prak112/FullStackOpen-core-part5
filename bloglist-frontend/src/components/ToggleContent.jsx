@@ -5,7 +5,7 @@ export default function ToggleContent({ showButtonLabel, children, hideButtonLab
     const [isVisible, setIsVisible] = useState(false);
     
     const showWhenIsVisible = { display: isVisible ? "" : "none" };
-    const hideWhenIsVisible = { display: isVisible ? "none" : "" };
+    const hideWhenIsNotVisible = { display: isVisible ? "none" : "" };
     const buttonStyle = { background: '#ADD8E6', color: 'black', borderRadius: '5px' }
 
     const toggleVisibility = () => {
@@ -14,10 +14,10 @@ export default function ToggleContent({ showButtonLabel, children, hideButtonLab
 
     return (
         <div>
-            <div style={hideWhenIsVisible}>
+            <div style={hideWhenIsNotVisible}>
                 <button style={buttonStyle}  onClick={toggleVisibility}>{showButtonLabel}</button>
             </div>
-            <div style={showWhenIsVisible}>
+            <div className="hidden-content" style={showWhenIsVisible}>
                 {children}
                 <button style={buttonStyle} onClick={toggleVisibility}>{hideButtonLabel}</button>
             </div>

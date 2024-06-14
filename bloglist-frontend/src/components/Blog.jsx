@@ -11,6 +11,12 @@ export default function Blog ({ blog, updateLikesInDb, removeBlogInDb }) {
     borderWidth: 1,
     marginBottom: 5
   }
+  const buttonStyle = { 
+    background: '#fd7136', 
+    color: 'white', 
+    borderRadius: '5px'
+  }
+
   // eslint-disable-next-line no-unused-vars
   const [blogLikes, setBlogLikes] = useState(0)
 
@@ -45,16 +51,25 @@ export default function Blog ({ blog, updateLikesInDb, removeBlogInDb }) {
 
   return (
     <div style={blogStyle}>
-      <li>
+      <li className='blog'>
         {blog.title} by {blog.author}
       </li>    
       <ToggleContent showButtonLabel='View' hideButtonLabel='Hide'>
         <div>
           <p><a href={blog.url}>{blog.url}</a></p>
-          <p>{blog.likes} likes <button onClick={() => updateLikes(blog)}>Like</button></p>
+          <p>
+            {blog.likes} likes 
+            <button className='blog-like' onClick={() => updateLikes(blog)}>
+              Like
+            </button>
+          </p>
           <p>Added by {blog.user.name}</p>
         </div>
-        <button style={{ background: '#fd7136', color: 'white', borderRadius: '5px'}} onClick={() => removeBlog(blog)}>Remove</button>
+        <button 
+          style={buttonStyle} 
+          onClick={() => removeBlog(blog)}>
+            Remove
+        </button>
       </ToggleContent>
     </div>
   )
