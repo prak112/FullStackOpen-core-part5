@@ -1,0 +1,29 @@
+{
+  "name": "e2e-tests",
+  "version": "1.0.0",
+  "description": "End to end testing of Blogs App using Playwright",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prak112/FullStackOpen-core-part5.git"
+  },
+  "keywords": [
+    "playwright",
+    "e2e",
+    "tests"
+  ],
+  "author": "Prakirth Govardhanam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prak112/FullStackOpen-core-part5/issues"
+  },
+  "homepage": "https://github.com/prak112/FullStackOpen-core-part5#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.44.1",
+    "@types/node": "^20.14.5"
+  }
+}
