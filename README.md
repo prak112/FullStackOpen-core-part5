@@ -9,5 +9,5 @@
 
 # Part 5 - Testing React apps and End-to-End Testing 
 - This part of the course deals with two parts :
-    1. [Setup and Testing Frontend](/bloglist-frontend/)
-    2. [End-to-End Testing](/) ... _Yet to come_ ...
+    1. [Setup and Testing Frontend](/bloglist-frontend/README.md)
+    2. [End-to-End Testing](/E2E-tests/README.md)
