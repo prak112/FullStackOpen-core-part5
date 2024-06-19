@@ -113,6 +113,7 @@ export default function App() {
 
   return (
     <div style={{ padding: '20px' }}>
+    <title>Blog List</title>
     <Notification message={notificationMessage} type={notificationType} />
       {user === null
         ? <LoginForm 
@@ -122,7 +123,6 @@ export default function App() {
             handleUsernameChange={(e) => setUsername(e.target.value)} 
             handlePasswordChange={(e) => setPassword(e.target.value)}/>
         : <div>
-            <h2>Blogs List</h2>
             <p>
               {user.name} Logged in &nbsp;
               <button onClick={() => setUser(null)}>Logout ?</button>
