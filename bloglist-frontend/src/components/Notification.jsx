@@ -31,7 +31,7 @@ export default  function Notification({ message, type }) {
         const notificationStyle = type === 'success' ? successStyle : failStyle
         return(
             <>
-            <div style={notificationStyle}>
+            <div data-testid="notification" style={notificationStyle}>
                 {message}
             </div>
             </>

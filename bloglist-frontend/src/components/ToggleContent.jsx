@@ -6,7 +6,7 @@ export default function ToggleContent({ showButtonLabel, children, hideButtonLab
     
     const showWhenIsVisible = { display: isVisible ? "" : "none" };
     const hideWhenIsNotVisible = { display: isVisible ? "none" : "" };
-    const buttonStyle = { background: '#ADD8E6', color: 'black', borderRadius: '5px' }
+    const buttonStyle = { background: 'violet', color: 'black', borderRadius: '5px' }
 
     const toggleVisibility = () => {
         setIsVisible(!isVisible);

@@ -114,17 +114,18 @@ export default function App() {
   return (
     <div style={{ padding: '20px' }}>
     <title>Blog List</title>
+    <h1 style={{ color: 'yellowgreen', fontStyle: 'oblique' }}>Blog List</h1>
     <Notification message={notificationMessage} type={notificationType} />
       {user === null
         ? <LoginForm 
-            handleLogin={handleLogin} 
-            username={username} 
-            password={password} 
-            handleUsernameChange={(e) => setUsername(e.target.value)} 
-            handlePasswordChange={(e) => setPassword(e.target.value)}/>
+              handleLogin={handleLogin} 
+              username={username} 
+              password={password} 
+              handleUsernameChange={(e) => setUsername(e.target.value)} 
+              handlePasswordChange={(e) => setPassword(e.target.value)}/>
         : <div>
             <p>
-              {user.name} Logged in &nbsp;
+              {user.name} logged in &nbsp;
               <button onClick={() => setUser(null)}>Logout ?</button>
             </p>
             <br />
@@ -132,16 +133,17 @@ export default function App() {
               <BlogForm addBlogToList={handleAddBlog} />
             </ToggleContent>
             <br />
-            {blogs.map((blog) => (
-              <Blog 
-                key={blog.id} 
-                blog={blog} 
-                updateLikesInDb={updateLikesInDb}
-                removeBlogInDb={removeBlogInDb}
-              />
-            ))}
           </div>
-      }      
+      }
+      <br />
+      {blogs.map((blog) => (
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          updateLikesInDb={updateLikesInDb}
+          removeBlogInDb={removeBlogInDb}
+        />
+      ))}
       <br />
       <Footer />
     </div>
