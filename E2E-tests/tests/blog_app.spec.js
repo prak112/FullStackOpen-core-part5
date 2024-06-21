@@ -1,11 +1,12 @@
+const helper = require('./helper').default
 const { test, expect, describe, beforeEach } = require('@playwright/test')
 
 describe('Blog App', () => {
     beforeEach(async ({ page, request }) => {
         // reset test DB
-        await request.post('http://localhost:3003/api/testing/reset') 
+        await request.post('/api/testing/reset')
         // register new user
-        await request.post('http://localhost:3003/api/users', {
+        await request.post('/api/users', {
             data: {
                 username: 'foo',
                 name: 'Fooper Man',
@@ -13,7 +14,7 @@ describe('Blog App', () => {
             }
         })
 
-        await page.goto('http://localhost:5173')
+        await page.goto('/')
     })
 
     // verify home page
@@ -26,14 +27,12 @@ describe('Blog App', () => {
     // verify login
     describe('Login', () => {
         test('success with valid credentials', async ({ page }) => {
-            await page.getByTestId('username').fill('foo')
-            await page.getByTestId('password').fill('secret-stuff')
-            await page.getByTestId('login').click()
-            
+            await helper.loginWith(page, 'foo', 'secret-stuff')
+
             await expect(page.getByText('Fooper Man logged in')).toBeVisible()
         })
 
-        test('fails with invalid credentials', async({ page }) => {
+        test('fails with invalid credentials', async ({ page }) => {
             await page.getByTestId('username').fill('foo')
             await page.getByTestId('password').fill('invalid')
             await page.getByTestId('login').click()
@@ -45,25 +44,28 @@ describe('Blog App', () => {
 
         // verify user actions
         describe('Logged in user', () => {
-            beforeEach(async({ page }) => {
-                await page.getByTestId('username').fill('foo')
-                await page.getByTestId('password').fill('secret-stuff')
-                await page.getByTestId('login').click()
+            beforeEach(async ({ page }) => {
+                await helper.loginWith(page, 'foo', 'secret-stuff')
             })
 
             // verify if user can add a blog
-            test('adds a blog', async({ page }) => {
-                await page.getByRole('button', { name: 'Add Blog' }).click()
-                await page.getByTestId('title').fill('Test blog 1')
-                await page.getByTestId('author').fill('Sallita')
-                await page.getByTestId('url').fill('https://www.example.com')
-                await page.getByTestId('add-blog').click()
-
+            test('adds a blog', async ({ page }) => {
+                await helper.addBlogTo(page, 'Test blog 1', 'Sallita', 'https://www.example.com')
                 const notificationDiv = page.getByTestId('notification')
+                
                 await expect(notificationDiv).toHaveText(/New blog added!/) // ERROR:JWT-User identity overlap -> RESOLVED-DEBUG_LOG-E2E-1
                 const locator = page.locator('.blog')
                 await expect(locator).toHaveText('Test blog 1 by Sallita')
             })
-        })       
+
+            // verify if user can like blog
+            test('can like existing blog', async ({ page }) => {
+                await helper.addBlogTo(page, 'Test blog 1', 'Sallita', 'https://www.example.com')
+                await page.getByRole('button', { name: 'View' }).click()
+                await page.getByRole('button', { name: 'Like' }).click()
+
+                await expect(page.getByTestId('likes')).toHaveText(/1 likes/)
+            })
+        })
     })
 })

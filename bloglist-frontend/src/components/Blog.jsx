@@ -57,7 +57,7 @@ export default function Blog ({ blog, updateLikesInDb, removeBlogInDb }) {
       <ToggleContent showButtonLabel='View' hideButtonLabel='Hide'>
         <div>
           <p><a href={blog.url}>{blog.url}</a></p>
-          <p>
+          <p data-testid="likes">
             {blog.likes} likes 
             <button className='blog-like' onClick={() => updateLikes(blog)}>
               Like
