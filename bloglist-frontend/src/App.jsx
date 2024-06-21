@@ -18,14 +18,9 @@ export default function App() {
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [notificationType, setNotificationType] = useState('')
 
-  // Verify user log in status, set auth-JWT
+  // httpOnly cookie
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if(loggedUserJSON){
-      const appUser = JSON.parse(loggedUserJSON)
-      setUser(appUser)
-      blogService.setToken(appUser.token)
-    }
+    window.localStorage.getItem('loggedBlogappUser')
   }, [])
 
   // Fetch ALL blogs
@@ -60,6 +55,12 @@ export default function App() {
       setNotificationType('fail')
       notificationTimeout(5)
     }
+  }
+
+  // clear localStorage, reset user
+  const handleLogout = () => {
+    window.localStorage.clear()
+    setUser(null)
   }
 
   // form data handled in BlogForm component
@@ -126,7 +127,7 @@ export default function App() {
         : <div>
             <p>
               {user.name} logged in &nbsp;
-              <button onClick={() => setUser(null)}>Logout ?</button>
+              <button onClick={handleLogout}>Logout ?</button>
             </p>
             <br />
             <ToggleContent showButtonLabel='Add Blog' hideButtonLabel='Cancel'>

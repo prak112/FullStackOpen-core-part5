@@ -1,18 +1,6 @@
 import axios from 'axios'
 
 const baseUrl = '/api/blogs'
-let token = null
-const setToken = (newToken) => {
-    token = `Bearer ${newToken}`
-}
-
-// Configuring the request interceptor to include token in the header
-axios.interceptors.request.use((config) => {
-    if(token){
-        config.headers.Authorization = token
-    }
-    return config
-})
 
 // GET
 const getAll = async () => {
@@ -39,4 +27,4 @@ const removeBlog = async(id, blogToDelete) => {
 }
 
 
-export default { getAll, addBlog, updateBlog, removeBlog, setToken }
+export default { getAll, addBlog, updateBlog, removeBlog }

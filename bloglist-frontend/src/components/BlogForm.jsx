@@ -16,16 +16,39 @@ export default function BlogForm({ addBlogToList }){
             <h2>Add a new blog</h2>
             <form onSubmit={addBlog}>
                 <div>
-                    Title: <input type="text" name="Title" value={newBlog.title || ''} onChange={(event) => setNewBlog({...newBlog, title: event.target.value})}/>
+                    Title:
+                    <input
+                        type="text"
+                        data-testid="title"
+                        name="Title"
+                        value={newBlog.title || ''}
+                        onChange={
+                            (event) => setNewBlog({ ...newBlog, title: event.target.value })} />
                 </div>
                 <div>
-                    Author: <input type="text" name="Author" value={newBlog.author || ''} onChange={(event) => setNewBlog({...newBlog, author: event.target.value})}/>
+                    Author: 
+                    <input 
+                        type="text"
+                        data-testid="author" 
+                        name="Author" 
+                        value={newBlog.author || ''} 
+                        onChange={
+                            (event) => setNewBlog({ ...newBlog, author: event.target.value })} />
                 </div>
                 <div>
-                    URL: <input type="text" name="URL" value={newBlog.url || ''} onChange={(event) => setNewBlog({...newBlog, url: event.target.value})}/>
+                    URL: 
+                    <input 
+                        type="text"
+                        data-testid="url"
+                        name="URL" 
+                        value={newBlog.url || ''} 
+                        onChange={
+                            (event) => setNewBlog({ ...newBlog, url: event.target.value })} />
                 </div>
                 <div>
-                    <button type="submit">Add Blog</button>
+                    <button type="submit" data-testid="add-blog" >
+                        Add Blog
+                    </button>
                 </div>
             </form>
         </div>

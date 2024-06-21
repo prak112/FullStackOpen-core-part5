@@ -13,7 +13,7 @@ describe('Blog App', () => {
             }
         })
 
-        await page.goto('http://localhost:5173');
+        await page.goto('http://localhost:5173')
     })
 
     // verify home page
@@ -38,9 +38,32 @@ describe('Blog App', () => {
             await page.getByTestId('password').fill('invalid')
             await page.getByTestId('login').click()
 
-            const notificationDiv = await page.getByTestId('notification')
+            const notificationDiv = page.getByTestId('notification')
             await expect(notificationDiv).toHaveText(/ERROR: Invalid/)
             await expect(page.getByText('Fooper Man logged in')).not.toBeVisible()
         })
+
+        // verify user actions
+        describe('Logged in user', () => {
+            beforeEach(async({ page }) => {
+                await page.getByTestId('username').fill('foo')
+                await page.getByTestId('password').fill('secret-stuff')
+                await page.getByTestId('login').click()
+            })
+
+            // verify if user can add a blog
+            test('adds a blog', async({ page }) => {
+                await page.getByRole('button', { name: 'Add Blog' }).click()
+                await page.getByTestId('title').fill('Test blog 1')
+                await page.getByTestId('author').fill('Sallita')
+                await page.getByTestId('url').fill('https://www.example.com')
+                await page.getByTestId('add-blog').click()
+
+                const notificationDiv = page.getByTestId('notification')
+                await expect(notificationDiv).toHaveText(/New blog added!/) // ERROR:JWT-User identity overlap -> RESOLVED-DEBUG_LOG-E2E-1
+                const locator = page.locator('.blog')
+                await expect(locator).toHaveText('Test blog 1 by Sallita')
+            })
+        })       
     })
 })
