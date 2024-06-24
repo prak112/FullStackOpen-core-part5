@@ -5,7 +5,7 @@ describe('Blog App', () => {
     beforeEach(async ({ page, request }) => {
         // reset test DB
         await request.post('/api/testing/reset')
-        // register new user
+        // register new users
         await request.post('/api/users', {
             data: {
                 username: 'foo',
@@ -65,6 +65,21 @@ describe('Blog App', () => {
                 await page.getByRole('button', { name: 'Like' }).click()
 
                 await expect(page.getByTestId('likes')).toHaveText(/1 likes/)
+            })
+
+            // verify if same user can delete blog
+            test('can remove added blog', async({ page }) => {
+                await page.pause()
+                await helper.addBlogTo(page, 'Test blog 1', 'Sallita', 'https://www.example.com')
+                await page.getByRole('button', { name: 'View' }).click()
+                page.on('dialog', async dialog => {
+                    console.log('Delete confirmation: ', dialog.message())
+                    await dialog.accept()
+                })
+
+                await page.getByRole('button', {name: 'Remove'}).click()
+                const notificationDiv = page.getByTestId('notification')
+                await expect(notificationDiv).toHaveText(/Removed blog: /)
             })
         })
     })
