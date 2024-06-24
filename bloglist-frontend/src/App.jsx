@@ -20,19 +20,19 @@ export default function App() {
 
   // httpOnly cookie
   useEffect(() => {
-    window.localStorage.getItem('loggedBlogappUser')
+    window.sessionStorage.getItem('loggedBlogappUser')
   }, [])
 
   // Fetch ALL blogs
-  useEffect(() => {
-      blogService
-        .getAll()
-        .then(blogs => {
-          const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes )
-          setBlogs(sortedBlogs)
-        })
-    }, [])
-
+  const fetchBlogsHook = () => {
+    blogService
+      .getAll()
+      .then(blogs => {
+        const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes )
+        setBlogs(sortedBlogs)
+      })
+  }
+  useEffect(() => fetchBlogsHook, [])
 
   const notificationTimeout = (inSeconds) => {
     setTimeout(() => {
@@ -40,12 +40,14 @@ export default function App() {
       setNotificationType('')
     }, inSeconds * 1000)
   }  
-  // setup local storage of authenticated user  
+
+  
+  // setup session storage of authenticated user  
   const handleLogin = async(event) => {
     event.preventDefault()
     try{
       const appUser = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(appUser))
+      window.sessionStorage.setItem('loggedBlogappUser', JSON.stringify(appUser))
       setUser(appUser)  
       setUsername('')
       setPassword('')
@@ -57,18 +59,19 @@ export default function App() {
     }
   }
 
-  // clear localStorage, reset user
+  // clear reset user
   const handleLogout = () => {
-    window.localStorage.clear()
     setUser(null)
   }
 
   // form data handled in BlogForm component
-  const handleAddBlog = async(blogObject) => {
+  const processBlogInfo = async(blogObject) => {
     try{
       const response = await blogService.addBlog(blogObject)
+      fetchBlogsHook()  // to populate user info
       setBlogs(blogs.concat(response))
-      setNotificationMessage(`New blog added! ${response.title} by ${response.author}`) 
+      setNotificationMessage(`New blog added! '${response.title} by ${response.author}'`) 
+      console.log('RESPONSE: ', response.user)
       setNotificationType('success')
       notificationTimeout(4)
     }
@@ -131,20 +134,19 @@ export default function App() {
             </p>
             <br />
             <ToggleContent showButtonLabel='Add Blog' hideButtonLabel='Cancel'>
-              <BlogForm addBlogToList={handleAddBlog} />
+              <BlogForm addBlogToList={processBlogInfo} />
             </ToggleContent>
             <br />
+            {blogs.map((blog) => (
+            <Blog 
+              key={blog.id} 
+              blog={blog} 
+              updateLikesInDb={updateLikesInDb}
+              removeBlogInDb={removeBlogInDb}
+            />
+            ))}
           </div>
       }
-      <br />
-      {blogs.map((blog) => (
-        <Blog 
-          key={blog.id} 
-          blog={blog} 
-          updateLikesInDb={updateLikesInDb}
-          removeBlogInDb={removeBlogInDb}
-        />
-      ))}
       <br />
       <Footer />
     </div>
