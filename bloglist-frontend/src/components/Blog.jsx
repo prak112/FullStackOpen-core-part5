@@ -16,19 +16,26 @@ export default function Blog ({ blog, updateLikesInDb, removeBlogInDb }) {
     color: 'white', 
     borderRadius: '5px'
   }
+  const loggedUser = JSON.parse(window.sessionStorage.getItem('loggedBlogappUser'))
+
 
   // eslint-disable-next-line no-unused-vars
   const [blogLikes, setBlogLikes] = useState(0)
+  const [isUserSame, setIsUserSame] = useState(false) // update 'Remove' button display
 
-  // GET likes for each blog from local storage
+  // GET likes for each blog from session storage
   useEffect(() => {
-    const storedLikes = window.localStorage.getItem(`blogLikes-${blog.user.id}`)
+    const storedLikes = window.sessionStorage.getItem(`blogLikes-${blog.user}`)
     setBlogLikes(storedLikes ? parseInt(storedLikes) : 0)
+
+    // verify if user logged also added blog
+    console.log(`Logged User: ${loggedUser.name}\nBlog added by: ${blog.user.name}`);
+    loggedUser.name === blog.user.name ? setIsUserSame(true) : setIsUserSame(false)
   }, [blog])
 
-  // SET local storage for likes of each blog
+  // SET session storage for likes of each blog
   useEffect(() => {
-    window.localStorage.setItem(`blogLikes-${blog.user.id}`, blog.likes)
+    window.sessionStorage.setItem(`blogLikes-${blog.user}`, blog.likes)
   }, [blog])
 
 
@@ -66,7 +73,10 @@ export default function Blog ({ blog, updateLikesInDb, removeBlogInDb }) {
           <p>Added by {blog.user.name}</p>
         </div>
         <button 
-          style={buttonStyle} 
+          style={{
+            ...buttonStyle,
+            display: isUserSame ? 'inline-block' : 'none'
+          }} 
           onClick={() => removeBlog(blog)}>
             Remove
         </button>
