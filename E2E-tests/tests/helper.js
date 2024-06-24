@@ -12,4 +12,9 @@ const addBlogTo = async(page, title, author, url) => {
     await page.getByTestId('add-blog').click()
 }
 
-export default { loginWith, addBlogTo }
+const likeBlog = async(page) => {
+    await page.getByRole('button', { name: 'View' }).click()
+    await page.getByRole('button', { name: 'Like' }).click()
+}
+
+export default { loginWith, addBlogTo, likeBlog }

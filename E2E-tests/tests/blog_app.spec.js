@@ -13,6 +13,13 @@ describe('Blog App', () => {
                 password: 'secret-stuff'
             }
         })
+        await request.post('/api/users', {
+            data: {
+                username: 'bloo',
+                name: 'Blooper Man',
+                password: 'parody-stuff'
+            }
+        })
 
         await page.goto('/')
     })
@@ -80,6 +87,22 @@ describe('Blog App', () => {
                 await page.getByRole('button', {name: 'Remove'}).click()
                 const notificationDiv = page.getByTestId('notification')
                 await expect(notificationDiv).toHaveText(/Removed blog: /)
+            })
+        })
+        
+        // verify if delete button is visible to user who added
+        describe('Another logged in user', () => {
+            beforeEach(async({ page }) => {
+                await helper.loginWith(page, 'foo', 'secret-stuff')
+                await helper.addBlogTo(page, 'Test blog 1', 'Sallita', 'https://www.example.com')
+                await helper.likeBlog(page)
+                await page.getByRole('button', {name: 'Logout ?'}).click()
+            })
+
+            test("cannot find 'Remove' button", async({ page }) => {
+                await helper.loginWith(page, 'bloo', 'parody-stuff')
+                await page.getByRole('button', {name: 'View'}).click()
+                await expect(page.getByRole('button', {name: 'Remove'})).toBeHidden()
             })
         })
     })
