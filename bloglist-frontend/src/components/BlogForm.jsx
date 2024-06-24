@@ -7,7 +7,7 @@ export default function BlogForm({ addBlogToList }){
 
     const addBlog = (event) => {
         event.preventDefault()
-        addBlogToList(newBlog)  // passed to addBlog in App, adds to Blogs list
+        addBlogToList(newBlog)  // passed to processBlogInfo in App.jsx, adds to Blogs list
         setNewBlog({})
     }
 
