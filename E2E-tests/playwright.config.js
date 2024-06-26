@@ -11,7 +11,7 @@ const { defineConfig, devices } = require('@playwright/test');
  * @see https://playwright.dev/docs/test-configuration
  */
 module.exports = defineConfig({
-  timeout: 3000,  // expires in 3 seconds
+  timeout: 2 * 60 * 1000,  // expires in 2 minutes
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: false,
@@ -27,6 +27,9 @@ module.exports = defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'http://localhost:5173',
+    launchOptions: {
+      slowMo: 100,
+    },
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

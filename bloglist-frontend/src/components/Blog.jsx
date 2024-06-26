@@ -29,7 +29,6 @@ export default function Blog ({ blog, updateLikesInDb, removeBlogInDb }) {
     setBlogLikes(storedLikes ? parseInt(storedLikes) : 0)
 
     // verify if user logged also added blog
-    console.log(`Logged User: ${loggedUser.name}\nBlog added by: ${blog.user.name}`);
     loggedUser.name === blog.user.name ? setIsUserSame(true) : setIsUserSame(false)
   }, [blog])
 
@@ -57,7 +56,7 @@ export default function Blog ({ blog, updateLikesInDb, removeBlogInDb }) {
 
 
   return (
-    <div style={blogStyle}>
+    <div data-testid='blog-info' style={blogStyle}>
       <li className='blog'>
         {blog.title} by {blog.author}
       </li>    

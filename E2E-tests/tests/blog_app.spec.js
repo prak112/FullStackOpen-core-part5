@@ -90,12 +90,11 @@ describe('Blog App', () => {
             })
         })
         
-        // verify if delete button is visible to user who added
+        // verify if delete button is visible to another user who did not add blog
         describe('Another logged in user', () => {
             beforeEach(async({ page }) => {
                 await helper.loginWith(page, 'foo', 'secret-stuff')
                 await helper.addBlogTo(page, 'Test blog 1', 'Sallita', 'https://www.example.com')
-                await helper.likeBlog(page)
                 await page.getByRole('button', {name: 'Logout ?'}).click()
             })
 
@@ -105,5 +104,7 @@ describe('Blog App', () => {
                 await expect(page.getByRole('button', {name: 'Remove'})).toBeHidden()
             })
         })
+
+        
     })
 })

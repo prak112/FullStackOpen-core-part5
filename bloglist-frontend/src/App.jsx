@@ -41,7 +41,7 @@ export default function App() {
     }, inSeconds * 1000)
   }  
 
-  
+
   // setup session storage of authenticated user  
   const handleLogin = async(event) => {
     event.preventDefault()
@@ -71,7 +71,6 @@ export default function App() {
       fetchBlogsHook()  // to populate user info
       setBlogs(blogs.concat(response))
       setNotificationMessage(`New blog added! '${response.title} by ${response.author}'`) 
-      console.log('RESPONSE: ', response.user)
       setNotificationType('success')
       notificationTimeout(4)
     }
@@ -87,6 +86,7 @@ export default function App() {
     try {    
       const response = await blogService.updateBlog(updatedBlog.id, updatedBlog)
       const updatedBlogs = blogs.map(blog => blog.id !== response.id ? blog : response)
+      fetchBlogsHook()  // to sort blogs by descending likes
       setBlogs(updatedBlogs)
     }
     catch(exception){
