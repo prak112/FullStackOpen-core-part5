@@ -1,5 +1,6 @@
-# Part 5
-
+# Frontend Testing 
+- `Vitest` :  for simulating web-browser
+- `jest-dom` and `react-testing-library` : for rendering components
 <hr>
 <hr>
 
