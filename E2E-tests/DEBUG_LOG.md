@@ -1,14 +1,3 @@
-# Frontend Testing 
-- `Vitest` :  for simulating web-browser
-- `jest-dom` and `react-testing-library` : for rendering components
-
-
-> *No noticeable issues*
-
-<br>
-<hr>
-<hr>
-
 # End-to-End(E2E) Testing
 - `Playwright` : 
 	- for automated frontend-backend testing using different browsers
